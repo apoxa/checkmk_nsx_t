@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- encoding: utf-8; py-indent-offset: 4 -*-
 # +------------------------------------------------------------------+
 # |             ____ _               _        __  __ _  __           |
@@ -24,13 +24,15 @@
 # to the Free Software Foundation, Inc., 51 Franklin St,  Fifth Floor,
 # Boston, MA 02110-1301 USA.
 
-import sys, getopt
+import sys
+import getopt
 import requests
-import json
-from requests.packages.urllib3.exceptions import InsecureRequestWarning # pylint: disable=import-error
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+
 
 def usage():
-    sys.stderr.write("""Check_MK VMWare NSX
+    sys.stderr.write(
+        """Check_MK VMWare NSX
 
 USAGE: agent_nsx [OPTIONS] HOST
 
@@ -40,15 +42,17 @@ OPTIONS:
   --user                        Username
   --password                    Password
   --no-cert-check               Disable certificate check
-""")
+"""
+    )
     sys.exit(1)
 
+
 short_options = "h"
-long_options  = ["help", "username=", "password=", "address=", "no-cert-check"]
+long_options = ["help", "username=", "password=", "address=", "no-cert-check"]
 
 try:
     opts, args = getopt.getopt(sys.argv[1:], short_options, long_options)
-except getopt.GetoptError, err:
+except getopt.GetoptError as err:
     sys.stderr.write("%s\n" % err)
     sys.exit(1)
 
@@ -56,153 +60,236 @@ except getopt.GetoptError, err:
 opt_cert = True
 args_dict = {}
 
-for o,a in opts:
-    if o in [ "--address" ]:
+for o, a in opts:
+    if o in ["--address"]:
         args_dict["address"] = a
-    elif o in [ "--username" ]:
+    elif o in ["--username"]:
         args_dict["username"] = a
-    elif o in [ "--password" ]:
+    elif o in ["--password"]:
         args_dict["password"] = a
-    elif o in [ "--no-cert-check" ]:
+    elif o in ["--no-cert-check"]:
         opt_cert = False
-    elif o in [ "-h", "--help" ]:
+    elif o in ["-h", "--help"]:
         usage()
 
+
 def query(url):
-    if opt_cert == False:
-        requests.packages.urllib3.disable_warnings(InsecureRequestWarning) # pylint: disable=no-member
-    response     = requests.get(url, verify=opt_cert, auth=(args_dict["username"], args_dict["password"]), headers={'Accept':'application/json', 'Content-Type':'application/xml'})
+    if opt_cert is False:
+        requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+    response = requests.get(
+        url,
+        verify=opt_cert,
+        auth=(args_dict["username"], args_dict["password"]),
+        headers={
+            "Accept": "application/json",
+            "Content-Type": "application/xml",
+        },
+    )
     return response.json()
 
+
 output_lines = []
+
+
 def output(line):
     output_lines.append(line)
+
 
 def process_edge_info():
     output("<<<nsx_edges:sep(9)>>>")
     edge_json = query_edges()
-    if edge_json['result_count'] > 0:
-        for child in edge_json['results']:
-            name=child['display_name']
-            edgeid=child['id']
+    if edge_json["result_count"] > 0:
+        for child in edge_json["results"]:
+            name = child["display_name"]
+            edgeid = child["id"]
             edge_status_json = query_edge(edgeid)
-            edgestatus=edge_status_json['status']
+            edgestatus = edge_status_json["status"]
             output("%s\t%s\t%s" % (name, edgeid, edgestatus))
+
 
 def process_nsx_backup_info():
     output("<<<nsx_backup:sep(9)>>>")
     backup_json = query_nsx_backup()
-    for backup_type in ['cluster_backup_statuses','node_backup_statuses','inventory_backup_statuses']:
+    for backup_type in [
+        "cluster_backup_statuses",
+        "node_backup_statuses",
+        "inventory_backup_statuses",
+    ]:
         for backup in backup_json[backup_type]:
-            backup_id = backup['backup_id']
-            backup_starttime = backup['start_time']
-            backup_endtime = backup['end_time']
-            output("%s\t%s\t%s\t%s" % (backup_type, backup_id, backup_starttime, backup_endtime))
+            backup_id = backup["backup_id"]
+            backup_starttime = backup["start_time"]
+            backup_endtime = backup["end_time"]
+            output(
+                "%s\t%s\t%s\t%s"
+                % (backup_type, backup_id, backup_starttime, backup_endtime)
+            )
+
 
 def process_nsx_status():
     nsx_status_json = query_nsx_status()
     output("<<<nsx_memory:sep(9)>>>")
-    totalMemory = nsx_status_json['mem_total']
-    usedMemory = nsx_status_json['mem_used']
-    freeMemory = nsx_status_json['mem_free']
-    cacheMemory = nsx_status_json['mem_cache']
-    bufferMemory = nsx_status_json['mem_buffer']
-    totalSwap = nsx_status_json['swap_total']
-    freeSwap = nsx_status_json['swap_total'] - nsx_status_json['swap_used']
-    output("MemTotal\t%s\nMemUsed\t%s\nMemFree\t%s\nCacheMemory\t%s\nBufferMemory\t%s\nSwapTotal\t%s\nSwapFree\t%s" % (totalMemory, usedMemory, freeMemory, cacheMemory, bufferMemory, totalSwap, freeSwap))
+    totalMemory = nsx_status_json["mem_total"]
+    usedMemory = nsx_status_json["mem_used"]
+    freeMemory = nsx_status_json["mem_free"]
+    cacheMemory = nsx_status_json["mem_cache"]
+    bufferMemory = nsx_status_json["mem_buffer"]
+    totalSwap = nsx_status_json["swap_total"]
+    freeSwap = nsx_status_json["swap_total"] - nsx_status_json["swap_used"]
+    output(
+        "MemTotal\t%s\n"
+        "MemUsed\t%s\n"
+        "MemFree\t%s\n"
+        "CacheMemory\t%s\n"
+        "BufferMemory\t%s\n"
+        "SwapTotal\t%s\n"
+        "SwapFree\t%s"
+        % (
+            totalMemory,
+            usedMemory,
+            freeMemory,
+            cacheMemory,
+            bufferMemory,
+            totalSwap,
+            freeSwap,
+        )
+    )
     output("<<<nsx_cpu>>>")
-    numCores = nsx_status_json['cpu_cores']
-    load_avg = nsx_status_json['load_average']
+    numCores = nsx_status_json["cpu_cores"]
+    load_avg = nsx_status_json["load_average"]
     output("%d" % numCores)
     output("%f %f %f" % tuple(load_avg))
     output("<<<nsx_uptime>>>")
-    uptime = nsx_status_json['uptime']
+    uptime = nsx_status_json["uptime"]
     output(str(uptime))
+
 
 def process_nsx_lb_status():
     nsx_lb_service_status = query_nsx_lb_service_status()
-    if nsx_lb_service_status['result_count'] > 0:
+    if nsx_lb_service_status["result_count"] > 0:
         vservers = []
         pools = []
         output("<<<nsx_lb_services:sep(59)>>>")
-        for lb_service in nsx_lb_service_status['results']:
-            lb_service_info = query_nsx_lb_service_details(lb_service['id'])
-            lb_stats = query_nsx_lb_service_stats(lb_service['id'])['statistics']
-            lb_name = lb_service['display_name']
-            lb_id = lb_service['id']
-            lb_enabled = lb_service['enabled']
-            lb_status = lb_service_info['service_status']
-            output("%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s" % 
-                    (lb_name,lb_id,lb_status,lb_enabled,
-                        lb_stats['l4_current_sessions'],
-                        lb_stats['l4_max_sessions'],
-                        lb_stats['l4_total_sessions'],
-                        lb_stats['l4_current_session_rate'],
-                        lb_stats['l7_current_sessions'],
-                        lb_stats['l7_max_sessions'],
-                        lb_stats['l7_total_sessions'],
-                        lb_stats['l7_current_session_rate'],
-                        ))
+        for lb_service in nsx_lb_service_status["results"]:
+            lb_service_info = query_nsx_lb_service_details(lb_service["id"])
+            lb_stats = query_nsx_lb_service_stats(lb_service["id"])
+            lb_name = lb_service["display_name"]
+            lb_id = lb_service["id"]
+            lb_enabled = lb_service["enabled"]
+            lb_status = lb_service_info["service_status"]
+            output(
+                "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s"
+                % (
+                    lb_name,
+                    lb_id,
+                    lb_status,
+                    lb_enabled,
+                    lb_stats["l4_current_sessions"],
+                    lb_stats["l4_max_sessions"],
+                    lb_stats["l4_total_sessions"],
+                    lb_stats["l4_current_session_rate"],
+                    lb_stats["l7_current_sessions"],
+                    lb_stats["l7_max_sessions"],
+                    lb_stats["l7_total_sessions"],
+                    lb_stats["l7_current_session_rate"],
+                )
+            )
 
-            if 'virtual_servers' in lb_service_info:
-                for v in lb_service_info['virtual_servers']:
-                    vserver_details = query_nsx_vserver_details(v['virtual_server_id'])
-                    vservers.extend([ {
-                        'id': v['virtual_server_id'],
-                        'status': v['status'],
-                        'name': vserver_details['display_name'],
-                        'enabled': vserver_details['enabled'],
-                        }])
+            if "virtual_servers" in lb_service_info:
+                for v in lb_service_info["virtual_servers"]:
+                    v_id = v["virtual_server_id"]
+                    v_details = query_nsx_vserver_details(v_id)
+                    vservers.extend(
+                        [
+                            {
+                                "id": v_id,
+                                "status": v["status"],
+                                "name": v_details["display_name"],
+                                "enabled": v_details["enabled"],
+                            }
+                        ]
+                    )
 
-            if 'pools' in lb_service_info:
-                for p in lb_service_info['pools']:
-                    pool_details = query_nsx_pool_details(p['pool_id'])
-                    pools.extend([ {
-                        'id': p['pool_id'],
-                        'status': p['status'],
-                        'name': pool_details['display_name'],
-                        'members': p['members'],
-                        }])
+            if "pools" in lb_service_info:
+                for p in lb_service_info["pools"]:
+                    pool_details = query_nsx_pool_details(p["pool_id"])
+                    pools.extend(
+                        [
+                            {
+                                "id": p["pool_id"],
+                                "status": p["status"],
+                                "name": pool_details["display_name"],
+                                "members": p["members"],
+                            }
+                        ]
+                    )
 
         output("<<<nsx_vservers:sep(59)>>>")
         for v in vservers:
-            output("%s;%s;%s;%s" % (v['id'], v['status'], v['enabled'], v['name']))
+            output("%s;%s;%s;%s"
+                   % (v["id"], v["status"], v["enabled"], v["name"]))
+
 
 def query_edges():
-    url = "https://{url}/api/v1/transport-nodes?node_types=EdgeNode".format(url=args_dict['address'])
+    url = "https://{url}/api/v1/transport-nodes?node_types=EdgeNode".format(
+        url=args_dict["address"]
+    )
     return query(url)
+
 
 def query_edge(nodeid):
-    url = "https://{url}/api/v1/transport-nodes/{id}/status".format(url=args_dict['address'], id=nodeid)
+    url = "https://{url}/api/v1/transport-nodes/{id}/status".format(
+        url=args_dict["address"], id=nodeid
+    )
     return query(url)
+
 
 def query_nsx_backup():
-    url = "https://{url}/api/v1/cluster/backups/history".format(url=args_dict['address'])
+    url = "https://{url}/api/v1/cluster/backups/history".format(
+        url=args_dict["address"]
+    )
     return query(url)
+
 
 def query_nsx_status():
-    url = "https://{url}/api/v1/node/status".format(url=args_dict['address'])
+    url = "https://{url}/api/v1/node/status".format(url=args_dict["address"])
     return query(url)
+
 
 def query_nsx_lb_service_status():
-    url = "https://{url}/api/v1/loadbalancer/services".format(url=args_dict['address'])
+    url = "https://{url}/api/v1/loadbalancer/services".format(
+        url=args_dict["address"]
+    )
     return query(url)
+
 
 def query_nsx_lb_service_details(serviceid):
-    url = "https://{url}/api/v1/loadbalancer/services/{id}/status".format(url=args_dict['address'],id=serviceid)
+    url = "https://{url}/api/v1/loadbalancer/services/{id}/status".format(
+        url=args_dict["address"], id=serviceid
+    )
     return query(url)
+
 
 def query_nsx_lb_service_stats(serviceid):
-    url = "https://{url}/api/v1/loadbalancer/services/{id}/statistics?source=realtime".format(url=args_dict['address'],id=serviceid)
-    return query(url)
+    url = ('https://{url}/api/v1/loadbalancer/services'
+           '/{id}/statistics?source=realtime').format(
+        url=args_dict["address"], id=serviceid
+    )
+    return query(url)["statistics"]
+
 
 def query_nsx_vserver_details(vserverid):
-    url = "https://{url}/api/v1/loadbalancer/virtual-servers/{id}".format(url=args_dict['address'],id=vserverid)
+    url = "https://{url}/api/v1/loadbalancer/virtual-servers/{id}".format(
+        url=args_dict["address"], id=vserverid
+    )
     return query(url)
 
+
 def query_nsx_pool_details(poolid):
-    url = "https://{url}/api/v1/loadbalancer/pools/{id}".format(url=args_dict['address'],id=poolid)
+    url = "https://{url}/api/v1/loadbalancer/pools/{id}".format(
+        url=args_dict["address"], id=poolid
+    )
     return query(url)
+
 
 def main():
     try:
@@ -215,10 +302,10 @@ def main():
         # Get Load Balancers, Virtual Servers and Pools
         process_nsx_lb_status()
         sys.stdout.write("\n".join(output_lines) + "\n")
-    except Exception, e:
+    except Exception as e:
         sys.stderr.write("Connection error: %s" % e)
         sys.exit(1)
 
+
 if __name__ == "__main__":
     main()
-
