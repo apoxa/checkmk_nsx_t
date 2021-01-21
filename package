@@ -19,7 +19,7 @@
         'inventory': [],
         'notifications': [],
         'pnp-templates': [],
-    }
+    },
     'name': 'Check_NSX',
     'title': u'Checkmk extension for NSX-T 3.x',
     'version': '0.2',
