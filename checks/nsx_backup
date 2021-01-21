@@ -1,0 +1,42 @@
+#!/usr/bin/python
+# -*- encoding: utf-8; py-indent-offset: 4 -*-
+
+factory_settings["nsx_backups_default_levels"] = {
+    "levels" : ( 7, 14 ),
+
+}
+
+nsx_backups_default_levels = ( 7, 14 )
+
+def inventory_nsx_backups(info):
+    return [(None, {})]
+
+
+def check_nsx_backup(item, params, info):
+    warn, crit = params["levels"]
+    if info:
+        last_backup = sorted(info, key=lambda tup: tup[2])[-1]
+        last_backup_size = last_backup[1]
+        last_backup_epoch = int(last_backup[2])/1000
+        #last_backup_time = datetime.datetime.fromtimestamp(float(last_backup[2])/1000)
+        last_backup_time = get_timestamp_human_readable(last_backup_epoch)
+        elapsed = int(time.time()) - last_backup_epoch
+        if elapsed >= crit * 24 * 60 * 60:
+           return 2, "Last backup was taken more than %s days ago. Last backup date is %s " \
+	    	 	% (crit, last_backup_time)
+        elif elapsed >= warn * 24 * 60 * 60:
+           return 1, "Last backup was taken more than %s days ago. Last backup date is %s " \
+                        % (warn, last_backup_time)
+        else:
+           return 0, "Date of last backup is %s" % last_backup_time
+    else:
+        return 3, "Backup not available"
+
+check_info['nsx_backup'] = {
+    'inventory_function'    : inventory_nsx_backups,
+    'check_function'        : check_nsx_backup,
+    'service_description'   : 'NSX Backups',
+    'has_perfdata'          : False,
+    'group'                 : "backups",
+    'default_levels_variable': "nsx_backups_default_levels",
+}

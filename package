@@ -1,0 +1,28 @@
+{
+    'author': u'Benjamin Stier <b.stier@levigo.de>',
+    'description': u'This package contains check plugins for NSX-T',
+    'download_url': 'https://github.com/apoxa/checkmk_nsx_t/releases',
+    'files': {
+        'agent_based': ['nsx_vserver.py'],
+        'agents': ['special/agent_nsx'],
+        'checkman': ['nsx_backup', 'nsx_cpu', 'nsx_edges', 'nsx_mem'],
+        'checks': ['agent_nsx',
+                   'nsx_backup',
+                   'nsx_cpu',
+                   'nsx_edge',
+                   'nsx_loadbalancer',
+                   'nsx_mem'],
+        'web': ['plugins/metrics/check_mk.py',
+                'plugins/wato/datasource_programs.py',
+                'plugins/wato/check_parameters.py'],
+        'doc': [],
+        'inventory': [],
+        'notifications': [],
+        'pnp-templates': [],
+    }
+    'name': 'Check_NSX',
+    'title': u'Checkmk extension for NSX-T 3.x',
+    'version': '0.2',
+    'version.min_required': '2.0.0b4',
+    'version.packaged': '2.0.0b4'
+}

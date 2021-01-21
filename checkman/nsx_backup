@@ -1,0 +1,14 @@
+title: VMWare NSX: Backup time
+agents: agent_nsx
+catalog: Miscellaneous
+license: GPL
+distribution: check_mk
+description:
+ This check monitors the date of last backup.
+item:
+ Backup service.
+
+perfdata:
+ none
+inventory:
+ One service called "NSX Backups".

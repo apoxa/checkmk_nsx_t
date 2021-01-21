@@ -1,0 +1,67 @@
+#!/usr/bin/env python3
+# -*- encoding: utf-8; py-indent-offset: 4 -*-
+
+NSX_LB_ENABLED_MAP = {
+    'True': (0, 'enabled'),
+    'False': (2, 'disabled'),
+}
+NSX_LB_STATUS_MAP = {
+    'UP': 0,
+    'DISABLED': 2,
+}
+
+def parse_lb_status(info):
+    lbs = {}
+    for line in info:
+        instance = lbs.setdefault(
+            line[0], {
+                "id": line[1],
+                "status": line[2],
+                "enabled": line[3],
+            })
+        for key, index in [
+            ("l4_current_sessions", 4),
+            ("l4_max_sessions", 5),
+            ("l4_total_sessions", 6),
+            ("l4_current_session_rate", 7),
+            ("l7_current_sessions", 8),
+            ("l7_max_sessions", 9),
+            ("l7_total_sessions", 10),
+            ("l7_current_session_rate", 11),
+        ]:
+            try:
+                value = int(line[index])
+            except (IndexError, ValueError):
+                continue
+            instance.setdefault(key, value)
+    return lbs
+
+def inventory_lb_status(parsed):
+    for name, lb in parsed.items():
+        yield name, {}
+
+@get_parsed_item_data
+def check_lb_status(_item, params, data):
+    if params is None:
+        params = {}
+
+    enabled_state, enabled_txt = NSX_LB_ENABLED_MAP.get(data['enabled'], 
+                                                 (3, "unknown[%s]" % data['enabled']))
+    yield enabled_state, "is %s" % (enabled_txt)
+
+    status_state = NSX_LB_STATUS_MAP.get(data['status'], 3) 
+    yield status_state, "State: %s" % (data['status'])
+
+    yield 0, "ID: %s" % (data['id'])
+
+    # TODO perfdata
+    yield 0, "Current HTTP Sessions %d, Session Rate %d" % (data['l7_current_sessions'], data['l7_current_sessions'])
+        
+
+check_info['nsx_lb_services'] = {
+    'parse_function': parse_lb_status,
+    'inventory_function': inventory_lb_status,
+    'check_function': check_lb_status,
+    'service_description': 'NSX LoadBalancer %s', 
+    'has_perfdata': True,
+}
