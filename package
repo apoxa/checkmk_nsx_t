@@ -3,12 +3,11 @@
     'description': u'This package contains check plugins for NSX-T',
     'download_url': 'https://github.com/apoxa/checkmk_nsx_t/releases',
     'files': {
-        'agent_based': ['nsx_vserver.py'],
+        'agent_based': ['nsx_vserver.py', 'nsx_cpu.py'],
         'agents': ['special/agent_nsx'],
         'checkman': ['nsx_backup', 'nsx_cpu', 'nsx_edges', 'nsx_mem'],
         'checks': ['agent_nsx',
                    'nsx_backup',
-                   'nsx_cpu',
                    'nsx_edge',
                    'nsx_loadbalancer',
                    'nsx_mem'],
