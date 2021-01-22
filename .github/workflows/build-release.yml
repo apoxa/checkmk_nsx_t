@@ -18,6 +18,8 @@ jobs:
       - name: Build the Package
         uses: jiuka/build-checkmk-extension@v1
         id: cmkpkg
+        with:
+          cmk-version: 2.0.0b4
 
       - name: Create Release
         id: create_release
