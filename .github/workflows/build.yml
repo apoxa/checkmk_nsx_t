@@ -16,7 +16,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    - uses: jiuka/build-checkmk-extension@v1
+    - uses: apoxa/build-checkmk-extension@28b5bc9e1eb5a41de1f3751b0e454527e46c2570
       id: cmkpkg
       with:
         cmk-version: 2.0.0b4
