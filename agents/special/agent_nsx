@@ -108,7 +108,7 @@ def process_edge_info():
 
 
 def process_nsx_backup_info():
-    output("<<<nsx_backup:sep(9)>>>")
+    output("<<<nsx_backups:sep(9)>>>")
     backup_json = query_nsx_backup()
     for backup_type in [
         "cluster_backup_statuses",
@@ -116,12 +116,13 @@ def process_nsx_backup_info():
         "inventory_backup_statuses",
     ]:
         for backup in backup_json[backup_type]:
-            backup_id = backup["backup_id"]
-            backup_starttime = backup["start_time"]
-            backup_endtime = backup["end_time"]
+            id = backup["backup_id"]
+            start = backup["start_time"]
+            end = backup["end_time"]
+            success = backup["success"]
             output(
-                "%s\t%s\t%s\t%s"
-                % (backup_type, backup_id, backup_starttime, backup_endtime)
+                "%s\t%s\t%s\t%s\t%s"
+                % (backup_type, id, start, end, success)
             )
 
 
