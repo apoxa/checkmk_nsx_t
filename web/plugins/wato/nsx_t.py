@@ -17,39 +17,43 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-
-register_rule("datasource_programs",
+register_rule(
+    "datasource_programs",
     "special_agents:nsx",
-     Dictionary(
-        title = _("Check state of a NSX-T 3.x environment"),
-        help = _("This rule selects the VMWare NSX-T agent"),
-        elements = [
-            ( "user",
-              TextAScii(
-                  title = _("Username"),
-                  allow_empty = False,
-              )
+    Dictionary(
+        title=_("Check state of a NSX-T 3.x environment"),
+        help=_("This rule selects the VMWare NSX-T agent"),
+        elements=[
+            (
+                "user",
+                TextAScii(
+                    title=_("Username"),
+                    allow_empty=False,
+                ),
             ),
-            ( "password",
-              TextAscii(
-                  title = _("Password"),
-                  allow_empty = False,
-              )
+            (
+                "password",
+                TextAscii(
+                    title=_("Password"),
+                    allow_empty=False,
+                ),
             ),
-            ( "cert",
-              DropdownChoice(
-                  title = _("SSL certificate verification"),
-                  choices = [
-                      (True, _("Activate")),
-                      (False, _("Deactivate")),
-                  ],
-              )
+            (
+                "cert",
+                DropdownChoice(
+                    title=_("SSL certificate verification"),
+                    choices=[
+                        (True, _("Activate")),
+                        (False, _("Deactivate")),
+                    ],
+                ),
             ),
         ],
-        optional_keys = [ 'cert' ],
+        optional_keys=["cert"],
     ),
-    factory_default = watolib.Rulespec.FACTORY_DEFAULT_UNUSED, # No default, do not use setting if no rule matches
-    match = 'first')
+    factory_default=watolib.Rulespec.FACTORY_DEFAULT_UNUSED,  # No default, do not use setting if no rule matches
+    match="first",
+)
 
 
 register_check_parameters(
@@ -57,22 +61,23 @@ register_check_parameters(
     "backups",
     _("Time since last backup"),
     Dictionary(
-        elements = [
-            ("levels",
+        elements=[
+            (
+                "levels",
                 Tuple(
-                    title = _("Time since of last backup"),
-                    elements = [
+                    title=_("Time since of last backup"),
+                    elements=[
                         Integer(
-                            title = _("Warning Level for time since last backup"),
-                            help = _("Warning Level for time since last backup."),
-                            unit = _("days"),
-                            default_value = 7,
+                            title=_("Warning Level for time since last backup"),
+                            help=_("Warning Level for time since last backup."),
+                            unit=_("days"),
+                            default_value=7,
                         ),
                         Integer(
-                            title = _("Critical Level for time since last backup"),
-                            help = _("Critical Level for time since last backup."),
-                            unit = _("days"),
-                            default_value = 14,
+                            title=_("Critical Level for time since last backup"),
+                            help=_("Critical Level for time since last backup."),
+                            unit=_("days"),
+                            default_value=14,
                         ),
                     ],
                 ),
@@ -80,7 +85,7 @@ register_check_parameters(
         ],
     ),
     None,
-    "dict"
+    "dict",
 )
 
 register_check_parameters(
@@ -88,20 +93,21 @@ register_check_parameters(
     "nsx_memory",
     _("Main memory usage of VMWare NSX system"),
     Dictionary(
-        elements = [
-            ("levels",
+        elements=[
+            (
+                "levels",
                 Tuple(
-                    title = _("Specify levels in percentage of total RAM"),
-                    elements = [
+                    title=_("Specify levels in percentage of total RAM"),
+                    elements=[
                         Percentage(
-                            title = _("Warning at a RAM usage of"),
-                            help = _("Warning level if memory usage is above"),
-                            default_value = 80.0,
+                            title=_("Warning at a RAM usage of"),
+                            help=_("Warning level if memory usage is above"),
+                            default_value=80.0,
                         ),
                         Percentage(
-                            title = _("Critical at a RAM usage of"),
-                            help= _("Critical level if memory usage is above"),
-                            default_value = 90.0,
+                            title=_("Critical at a RAM usage of"),
+                            help=_("Critical level if memory usage is above"),
+                            default_value=90.0,
                         ),
                     ],
                 ),
@@ -109,5 +115,5 @@ register_check_parameters(
         ],
     ),
     None,
-    match_type = "dict",
+    match_type="dict",
 )
