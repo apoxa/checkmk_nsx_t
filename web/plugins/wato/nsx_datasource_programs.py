@@ -7,6 +7,7 @@ from cmk.gui.plugins.wato import (
     rulespec_registry,
     HostRulespec,
 )
+from cmk.gui.plugins.wato.datasource_programs import RulespecGroupDatasourcePrograms
 from cmk.gui.valuespec import Dictionary, DropdownChoice, TextAscii, Transform
 from cmk.gui.i18n import _
 
@@ -66,7 +67,7 @@ def _valuespec_special_agents_nsx():
 rulespec_registry.register(
     HostRulespec(
         factory_default=_factory_default_special_agents_nsx(),
-        group="datasource_programs",
+        group=RulespecGroupDatasourcePrograms,
         name="special_agents:nsx",
         valuespec=_valuespec_special_agents_nsx,
     )
