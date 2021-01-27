@@ -1,0 +1,15 @@
+title: VMWare NSX: Virtual Server status
+agents: agent_nsx
+catalog: Miscellaneous
+license: GPL
+distribution: check_mk
+description:
+ This check monitors the status of VMWare NSX Load Balancer Virtual Servers
+item:
+ The item is composed from the virtual-server-id.
+
+perfdata:
+ none
+inventory:
+ All NSX Load Balancer Virtual Servers defined will be inventorized.
+
