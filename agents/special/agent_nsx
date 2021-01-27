@@ -169,7 +169,7 @@ def process_nsx_lb_status():
     if nsx_lb_service_status["result_count"] > 0:
         vservers = []
         pools = []
-        output("<<<nsx_lb_services:sep(59)>>>")
+        output("<<<nsx_loadbalancer:sep(59)>>>")
         for lb_service in nsx_lb_service_status["results"]:
             lb_service_info = query_nsx_lb_service_details(lb_service["id"])
             lb_stats = query_nsx_lb_service_stats(lb_service["id"])
