@@ -3,18 +3,17 @@
     "description": "This package contains check plugins for NSX-T",
     "download_url": "https://github.com/apoxa/checkmk_nsx_t/releases",
     "files": {
-        "agent_based": ["nsx_backups.py", "nsx_cpu.py", "nsx_vserver.py"],
+        "agent_based": ["nsx_backups.py", "nsx_cpu.py", "nsx_mem.py", "nsx_vserver.py"],
         "agents": ["special/agent_nsx"],
         "checkman": ["nsx_cpu", "nsx_edges", "nsx_mem"],
         "checks": [
             "agent_nsx",
             "nsx_edge",
             "nsx_loadbalancer",
-            "nsx_mem",
         ],
         "web": [
             "plugins/metrics/check_mk.py",
-            "plugins/wato/nsx_t.py",
+            "plugins/wato/nsx_datasource_programs.py",
             "plugins/wato/nsx_backups_params.py",
         ],
         "doc": [],
