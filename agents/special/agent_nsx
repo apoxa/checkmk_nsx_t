@@ -128,7 +128,7 @@ def process_nsx_backup_info():
 
 def process_nsx_status():
     nsx_status_json = query_nsx_status()
-    output("<<<nsx_memory:sep(9)>>>")
+    output("<<<nsx_mem:sep(9)>>>")
     totalMemory = nsx_status_json["mem_total"]
     usedMemory = nsx_status_json["mem_used"]
     freeMemory = nsx_status_json["mem_free"]
