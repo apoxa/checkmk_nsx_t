@@ -4,12 +4,12 @@ catalog: Miscellaneous
 license: GPL
 distribution: check_mk
 description:
- This check monitors the memory usage.
-item:
- Memory used
+ This check measures the memory usage of a NSX manager node.
 
-perfdata:
- Two graphs for memory used and all memory
+ The logic used for monitoring is exactly the same as in the
+ agent based check {mem.used}. Please refer to the man page
+ of that check for details.
+
 inventory:
- One service called "Memory Usage".
+ One service is created for the target host.
 
