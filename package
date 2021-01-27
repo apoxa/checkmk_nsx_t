@@ -8,7 +8,7 @@
             "nsx_cpu.py",
             "nsx_edges.py",
             "nsx_mem.py",
-            "nsx_loadbalancer",
+            "nsx_loadbalancer.py",
             "nsx_vserver.py",
         ],
         "agents": ["special/agent_nsx"],
