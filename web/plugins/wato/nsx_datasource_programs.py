@@ -17,15 +17,7 @@ def _factory_default_special_agents_nsx():
 
 
 def _transform_agent_nsx(params):
-    params.setdefault("skip_placeholder_vms", True)
-    params.setdefault("ssl", False)
-    params.setdefault("use_pysphere", False)
-    params.setdefault("spaces", "underscore")
-
-    if "snapshots_on_host" not in params:
-        params["snapshots_on_host"] = (
-            params.pop("snapshot_display", "vCenter") == "esxhost"
-        )
+    params.setdefault("cert", False)
 
     return params
 
