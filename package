@@ -5,7 +5,7 @@
     "files": {
         "agent_based": ["nsx_backups.py", "nsx_cpu.py", "nsx_mem.py", "nsx_vserver.py"],
         "agents": ["special/agent_nsx"],
-        "checkman": ["nsx_cpu", "nsx_edges", "nsx_mem"],
+        "checkman": ["nsx_backups", "nsx_cpu", "nsx_edges", "nsx_mem", "nsx_vserver"],
         "checks": [
             "agent_nsx",
             "nsx_edge",
