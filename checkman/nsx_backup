@@ -6,9 +6,9 @@ distribution: check_mk
 description:
  This check monitors the date of last backup.
 item:
- Backup service.
+ The item is composed from the backup type.
 
 perfdata:
  none
 inventory:
- One service called "NSX Backups".
+ All backup types will be inventorized.
