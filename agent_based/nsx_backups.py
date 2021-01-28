@@ -65,7 +65,9 @@ def discover_nsx_backups(section: Section) -> DiscoveryResult:
 
 
 def check_nsx_backups(
-    item: str, params: Mapping[str, Any], section: Section
+    item: str,
+    params: Mapping[str, Any],
+    section: Section,
 ) -> CheckResult:
     if item not in section:
         return
@@ -100,7 +102,9 @@ def check_nsx_backups(
 
 
 def cluster_check_nsx_backups(
-    item: str, params: Mapping[str, Any], section: Mapping[str, Section]
+    item: str,
+    params: Mapping[str, Any],
+    section: Mapping[str, Section],
 ) -> CheckResult:
     datasets, nodeinfos = [], []
     for node, data in section.items():
@@ -115,7 +119,7 @@ def cluster_check_nsx_backups(
 
     # In the 1.6 version of this check, a different node may have been
     # checked as in Python 2.7 dicts were unordered.
-    yield from check_nsx_backups(item, {item: datasets[0]})
+    yield from check_nsx_backups(item, params, {item: datasets[0]})
 
     # In cluster mode we check if data sets are equal from all nodes
     # else we have only one data set
