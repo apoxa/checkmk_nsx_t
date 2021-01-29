@@ -27,6 +27,7 @@
 import sys
 import getopt
 import requests
+import json
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 
@@ -212,22 +213,15 @@ def process_nsx_lb_status():
 
             if "pools" in lb_service_info:
                 for p in lb_service_info["pools"]:
-                    pool_details = query_nsx_pool_details(p["pool_id"])
-                    pools.extend(
-                        [
-                            {
-                                "id": p["pool_id"],
-                                "status": p["status"],
-                                "name": pool_details["display_name"],
-                                "members": p["members"],
-                            }
-                        ]
-                    )
+                    pools.extend([p])
 
         output("<<<nsx_vservers:sep(59)>>>")
         for v in vservers:
             output("%s;%s;%s;%s"
                    % (v["id"], v["status"], v["enabled"], v["name"]))
+
+        output("<<<nsx_pools:sep(59)>>>")
+        output(json.dumps(pools))
 
 
 def query_edges():
