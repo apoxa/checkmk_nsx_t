@@ -23,12 +23,13 @@ SECTION = Dict[str, Dict[str, str]]
 
 _ENABLED_MAP = {
     "True": (State.OK, "enabled"),
-    "False": (State.CRIT, "disabled"),
+    "False": (State.WARN, "disabled"),
 }
 
 _STATUS_MAP = {
     "UP": State.OK,
-    "DISABLED": State.CRIT,
+    "DOWN": State.CRIT,
+    "DISABLED": State.WARN,
 }
 
 
@@ -59,12 +60,12 @@ def check_nsx_vservers(item: str, section: SECTION) -> CheckResult:
 
     vserver = section[item]
     enabled_state, enabled_txt = _ENABLED_MAP.get(
-        vserver["enabled"], (3, "unknown[%s]" % vserver["enabled"])
+        vserver["enabled"], (State.UNKNOWN, "unknown[%s]" % vserver["enabled"])
     )
     yield Result(state=enabled_state, summary=f"is {enabled_txt}")
 
     yield Result(
-        state=_STATUS_MAP.get(vserver["status"], 3),
+        state=_STATUS_MAP.get(vserver["status"], State.UNKNOWN),
         summary=f"State: {vserver['status']}",
     )
 
