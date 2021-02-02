@@ -218,6 +218,8 @@ def process_nsx_lb_status():
 
             if "pools" in lb_service_info:
                 for p in lb_service_info["pools"]:
+                    p_details = query_nsx_pool_details(p["pool_id"])
+                    p["display_name"] = p_details["display_name"]
                     pools.extend([p])
 
         output("<<<nsx_vservers:sep(59)>>>")
