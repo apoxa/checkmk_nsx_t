@@ -1,0 +1,15 @@
+title: VMWare NSX: Server Pool status
+agents: agent_nsx
+catalog: Miscellaneous
+license: GPL
+distribution: check_mk
+description:
+ This check monitors the status of VMWare NSX Load Balancer Server Pool
+item:
+ The item is composed from the display_name.
+
+perfdata:
+ none
+inventory:
+ All NSX Load Balancer Server Pools defined will be inventorized.
+

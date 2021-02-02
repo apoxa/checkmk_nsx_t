@@ -9,6 +9,7 @@
             "nsx_edges.py",
             "nsx_mem.py",
             "nsx_loadbalancer.py",
+            "nsx_pools.py",
             "nsx_vserver.py",
         ],
         "agents": ["special/agent_nsx"],
@@ -18,6 +19,7 @@
             "nsx_edges",
             "nsx_mem",
             "nsx_loadbalancer",
+            "nsx_pools",
             "nsx_vserver",
         ],
         "checks": [
