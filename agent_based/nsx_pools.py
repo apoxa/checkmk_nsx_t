@@ -79,16 +79,6 @@ def cluster_check_nsx_pools(item: str, section: Mapping[str, Section]) -> CheckR
     # checked as in Python 2.7 dicts were unordered.
     yield from check_nsx_pools(item, {item: datasets[0]})
 
-    # In cluster mode we check if data sets are equal from all nodes
-    # else we have only one data set
-    if len(
-        set([y for x in list(map(lambda x: list(x.values()), datasets)) for y in x])
-    ) > len(set(list(datasets[0].values()))):
-        yield Result(
-            state=State.UNKNOWN,
-            summary="Cluster: data from nodes are not equal",
-        )
-
 
 register.agent_section(
     name="nsx_pools",
