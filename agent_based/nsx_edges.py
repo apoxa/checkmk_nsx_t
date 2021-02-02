@@ -4,6 +4,7 @@
 from typing import (
     Dict,
     Mapping,
+    TypedDict,
 )
 
 from .agent_based_api.v1 import (
@@ -19,7 +20,16 @@ from .agent_based_api.v1.type_defs import (
     DiscoveryResult,
 )
 
-SECTION = Dict[str, Dict[str, str]]
+import json
+
+
+class EdgeData(TypedDict, total=False):
+    id: str
+    status: str
+    display_name: str
+
+
+Section = Dict[str, EdgeData]
 
 _STATUS_MAP = {
     "UP": State.OK,
@@ -27,17 +37,21 @@ _STATUS_MAP = {
 }
 
 
-def parse_nsx_edges(string_table: StringTable) -> SECTION:
-    parsed: SECTION = {}
+def parse_nsx_edges(string_table: StringTable) -> Section:
+    parsed: Section = {}
+    for edge in json.loads(string_table[0][0]) or []:
+        result = EdgeData()
+        if "node_uuid" in edge:
+            result["id"] = str(edge["node_uuid"])
+        if "status" in edge:
+            result["status"] = str(edge["status"])
+        if "node_display_name" in edge:
+            result["display_name"] = str(edge["node_display_name"])
 
-    for line in string_table:
-        parsed.setdefault(
-            line[0],
-            {
-                "id": line[1],
-                "status": line[2],
-            },
-        )
+        if "display_name" not in result:
+            continue
+
+        parsed.setdefault(result["display_name"], result)
 
     return parsed
 
@@ -48,12 +62,12 @@ register.agent_section(
 )
 
 
-def discover_nsx_edges(section: SECTION) -> DiscoveryResult:
+def discover_nsx_edges(section: Section) -> DiscoveryResult:
     for item in section:
         yield Service(item=item)
 
 
-def check_nsx_edges(item: str, section: SECTION) -> CheckResult:
+def check_nsx_edges(item: str, section: Section) -> CheckResult:
     if item not in section:
         return
 
@@ -64,7 +78,7 @@ def check_nsx_edges(item: str, section: SECTION) -> CheckResult:
     yield Result(state=State.OK, summary=f"ID: {edge['id']}")
 
 
-def cluster_check_nsx_edges(item: str, section: Mapping[str, SECTION]) -> CheckResult:
+def cluster_check_nsx_edges(item: str, section: Mapping[str, Section]) -> CheckResult:
     datasets, nodeinfos = [], []
     for node, data in section.items():
         if item in data:

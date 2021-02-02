@@ -100,12 +100,20 @@ def process_edge_info():
     output("<<<nsx_edges:sep(9)>>>")
     edge_json = query_edges()
     if edge_json["result_count"] > 0:
-        for child in edge_json["results"]:
-            name = child["display_name"]
-            edgeid = child["id"]
-            edge_status_json = query_edge(edgeid)
-            edgestatus = edge_status_json["status"]
-            output("%s\t%s\t%s" % (name, edgeid, edgestatus))
+        r = edge_json["results"]
+        # Fetch edge details
+        for edge in r:
+            edge_status = query_edge(edge["id"])
+            for key in [
+                "pnic_status",
+                "control_connection_status",
+                "tunnel_status",
+                "node_status",
+            ]:
+                edge_status.pop(key, None)
+            edge.clear()
+            edge.update(edge_status)
+        output(json.dumps(r))
 
 
 def process_nsx_backup_info():
@@ -121,10 +129,7 @@ def process_nsx_backup_info():
             start = backup["start_time"]
             end = backup["end_time"]
             success = backup["success"]
-            output(
-                "%s\t%s\t%s\t%s\t%s"
-                % (backup_type, id, start, end, success)
-            )
+            output("%s\t%s\t%s\t%s\t%s" % (backup_type, id, start, end, success))
 
 
 def process_nsx_status():
@@ -217,8 +222,7 @@ def process_nsx_lb_status():
 
         output("<<<nsx_vservers:sep(59)>>>")
         for v in vservers:
-            output("%s;%s;%s;%s"
-                   % (v["id"], v["status"], v["enabled"], v["name"]))
+            output("%s;%s;%s;%s" % (v["id"], v["status"], v["enabled"], v["name"]))
 
         output("<<<nsx_pools:sep(59)>>>")
         output(json.dumps(pools))
@@ -251,9 +255,7 @@ def query_nsx_status():
 
 
 def query_nsx_lb_service_status():
-    url = "https://{url}/api/v1/loadbalancer/services".format(
-        url=args_dict["address"]
-    )
+    url = "https://{url}/api/v1/loadbalancer/services".format(url=args_dict["address"])
     return query(url)
 
 
@@ -265,10 +267,9 @@ def query_nsx_lb_service_details(serviceid):
 
 
 def query_nsx_lb_service_stats(serviceid):
-    url = ('https://{url}/api/v1/loadbalancer/services'
-           '/{id}/statistics?source=realtime').format(
-        url=args_dict["address"], id=serviceid
-    )
+    url = (
+        "https://{url}/api/v1/loadbalancer/services" "/{id}/statistics?source=realtime"
+    ).format(url=args_dict["address"], id=serviceid)
     return query(url)["statistics"]
 
 
