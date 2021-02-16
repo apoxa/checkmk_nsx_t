@@ -5,6 +5,7 @@
     "files": {
         "agent_based": [
             "nsx_backups.py",
+            "nsx_certificates.py",
             "nsx_cpu.py",
             "nsx_edges.py",
             "nsx_mem.py",
@@ -15,6 +16,7 @@
         "agents": ["special/agent_nsx"],
         "checkman": [
             "nsx_backups",
+            "nsx_certificates",
             "nsx_cpu",
             "nsx_edges",
             "nsx_mem",
@@ -29,6 +31,7 @@
             "plugins/metrics/check_mk.py",
             "plugins/wato/nsx_datasource_programs.py",
             "plugins/wato/nsx_backups_params.py",
+            "plugins/wato/nsx_certificates_params.py",
         ],
         "doc": [],
         "inventory": [],
@@ -37,7 +40,7 @@
     },
     "name": "Check_NSX",
     "title": "Checkmk extension for NSX-T 3.x",
-    "version": "0.3.1",
+    "version": "0.4.0",
     "version.min_required": "2.0.0b4",
     "version.packaged": "2.0.0b4",
 }
