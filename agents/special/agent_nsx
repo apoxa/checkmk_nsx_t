@@ -230,6 +230,65 @@ def process_nsx_lb_status():
         output(json.dumps(pools))
 
 
+def process_nsx_certificates():
+    output("<<<nsx_certificates:sep(9)>>>")
+    certs_json = query_certs()
+    if certs_json["result_count"] < 1:
+        return
+
+    r = certs_json["results"]
+    result = []
+    # Fetch certificate details
+    for cert in r:
+        cert_details = query_cert_details(cert["id"])
+        # We're only interested in the first cert in the chain
+        cert_details["details"] = cert_details["details"][0]
+        # Strip some fields
+        for key in [
+            "pem_encoded",
+            "tags",
+            "_create_user",
+            "_create_time",
+            "_last_modified_user",
+            "_last_modified_time",
+            "_system_owned",
+            "_protection",
+            "_revision",
+        ]:
+            cert_details.pop(key, None)
+        # Strip more fields from details
+        for key in [
+            "version",
+            "serial_number",
+            "signature_algorithm",
+            "signature",
+            "issuer",
+            "subject",
+            "public_key_algo",
+            "public_key_length",
+            "rsa_public_key_modulus",
+            "rsa_public_key_exponent",
+            "is_ca",
+        ]:
+            cert_details["details"].pop(key, None)
+        result.extend([cert_details])
+    output(json.dumps(result))
+
+
+def query_certs():
+    url = "https://{url}/api/v1/trust-management/certificates".format(
+        url=args_dict["address"]
+    )
+    return query(url)
+
+
+def query_cert_details(certid):
+    url = "https://{url}/api/v1/trust-management/certificates/{id}?details=true".format(
+        url=args_dict["address"], id=certid
+    )
+    return query(url)
+
+
 def query_edges():
     url = "https://{url}/api/v1/transport-nodes?node_types=EdgeNode".format(
         url=args_dict["address"]
@@ -299,6 +358,8 @@ def main():
         process_nsx_status()
         # Get Load Balancers, Virtual Servers and Pools
         process_nsx_lb_status()
+        # Get ceritificate data
+        process_nsx_certificates()
         sys.stdout.write("\n".join(output_lines) + "\n")
     except Exception as e:
         sys.stderr.write("Connection error: %s" % e)
