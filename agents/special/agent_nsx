@@ -40,7 +40,7 @@ USAGE: agent_nsx [OPTIONS] HOST
 OPTIONS:
   -h, --help                    Show this help message and exit
   --address                     Host address
-  --user                        Username
+  --username                    Username
   --password                    Password
   --no-cert-check               Disable certificate check
 """
