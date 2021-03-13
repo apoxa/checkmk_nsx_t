@@ -64,20 +64,11 @@ def check_nsx_pools(item: str, section: Section) -> CheckResult:
 
 
 def cluster_check_nsx_pools(item: str, section: Mapping[str, Section]) -> CheckResult:
-    datasets, nodeinfos = [], []
-    for node, data in section.items():
-        if item in data:
-            datasets.append(data[item].copy())
-            nodeinfos.append(node)
-
-    if len(datasets) == 0:
-        return
-
-    yield Result(state=State.OK, summary="%s" % "/".join(nodeinfos))
-
-    # In the 1.6 version of this check, a different node may have been
-    # checked as in Python 2.7 dicts were unordered.
-    yield from check_nsx_pools(item, {item: datasets[0]})
+    yield Result(state=State.OK, summary='Nodes: %s' % ', '.join(section.keys()))
+    for node_section in section.values():
+        if item in node_section:
+            yield from check_nsx_pools(item, node_section)
+            return
 
 
 register.agent_section(

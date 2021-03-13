@@ -75,30 +75,11 @@ def check_nsx_vservers(item: str, section: SECTION) -> CheckResult:
 def cluster_check_nsx_vservers(
     item: str, section: Mapping[str, SECTION]
 ) -> CheckResult:
-    datasets, nodeinfos = [], []
-    for node, data in section.items():
-        if item in data:
-            datasets.append(data[item].copy())
-            nodeinfos.append(node)
-
-    if len(datasets) == 0:
-        return
-
-    yield Result(state=State.OK, summary="%s" % "/".join(nodeinfos))
-
-    # In the 1.6 version of this check, a different node may have been
-    # checked as in Python 2.7 dicts were unordered.
-    yield from check_nsx_vservers(item, {item: datasets[0]})
-
-    # In cluster mode we check if data sets are equal from all nodes
-    # else we have only one data set
-    if len(
-        set([y for x in list(map(lambda x: list(x.values()), datasets)) for y in x])
-    ) > len(set(list(datasets[0].values()))):
-        yield Result(
-            state=State.UNKNOWN,
-            summary="Cluster: data from nodes are not equal",
-        )
+    yield Result(state=State.OK, summary="Nodes: %s" % ", ".join(section.keys()))
+    for node_section in section.values():
+        if item in node_section:
+            yield from check_nsx_vservers(item, node_section)
+            return
 
 
 register.agent_section(
