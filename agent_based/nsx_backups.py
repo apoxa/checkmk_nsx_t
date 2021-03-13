@@ -109,7 +109,7 @@ def cluster_check_nsx_backups(
     yield Result(state=State.OK, summary='Nodes: %s' % ', '.join(section.keys()))
     for node_section in section.values():
         if item in node_section:
-            yield from check_nsx_backups(item, node_section)
+            yield from check_nsx_backups(item, params, {item: node_section[item]})
             return
 
 
