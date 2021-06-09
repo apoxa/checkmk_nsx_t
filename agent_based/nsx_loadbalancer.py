@@ -36,7 +36,7 @@ def parse_nsx_loadbalancer(string_table: StringTable) -> SECTION:
     parsed: SECTION = {}
 
     for line in string_table:
-        instance = parsed.setdefault(
+        parsed.setdefault(
             line[0],
             {
                 "id": line[1],
@@ -44,21 +44,6 @@ def parse_nsx_loadbalancer(string_table: StringTable) -> SECTION:
                 "enabled": line[3],
             },
         )
-        for key, index in [
-            ("l4_current_sessions", 4),
-            ("l4_max_sessions", 5),
-            ("l4_total_sessions", 6),
-            ("l4_current_session_rate", 7),
-            ("l7_current_sessions", 8),
-            ("l7_max_sessions", 9),
-            ("l7_total_sessions", 10),
-            ("l7_current_session_rate", 11),
-        ]:
-            try:
-                value = int(line[index])
-            except (IndexError, ValueError):
-                continue
-            instance.setdefault(key, value)
 
     return parsed
 

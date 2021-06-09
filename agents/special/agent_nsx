@@ -178,26 +178,17 @@ def process_nsx_lb_status():
         output("<<<nsx_loadbalancer:sep(59)>>>")
         for lb_service in nsx_lb_service_status["results"]:
             lb_service_info = query_nsx_lb_service_details(lb_service["id"])
-            lb_stats = query_nsx_lb_service_stats(lb_service["id"])
             lb_name = lb_service["display_name"]
             lb_id = lb_service["id"]
             lb_enabled = lb_service["enabled"]
             lb_status = lb_service_info["service_status"]
             output(
-                "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s"
+                "%s;%s;%s;%s"
                 % (
                     lb_name,
                     lb_id,
                     lb_status,
-                    lb_enabled,
-                    lb_stats["l4_current_sessions"],
-                    lb_stats["l4_max_sessions"],
-                    lb_stats["l4_total_sessions"],
-                    lb_stats["l4_current_session_rate"],
-                    lb_stats["l7_current_sessions"],
-                    lb_stats["l7_max_sessions"],
-                    lb_stats["l7_total_sessions"],
-                    lb_stats["l7_current_session_rate"],
+                    lb_enabled
                 )
             )
 
