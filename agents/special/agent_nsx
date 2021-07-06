@@ -181,7 +181,7 @@ def process_nsx_lb_status():
             lb_name = lb_service["display_name"]
             lb_id = lb_service["id"]
             lb_enabled = lb_service["enabled"]
-            lb_status = lb_service_info["service_status"]
+            lb_status = lb_service_info.get("service_status", "UNKNOWN")
             output(
                 "%s;%s;%s;%s"
                 % (
