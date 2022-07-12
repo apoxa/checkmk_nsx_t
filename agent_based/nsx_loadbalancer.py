@@ -60,7 +60,7 @@ def discover_nsx_loadbalancer(section: SECTION) -> DiscoveryResult:
         yield Service(item=item)
 
 
-def check_nsx_loadbalancer(item: str, section: Optional[SECTION]) -> CheckResult:
+def check_nsx_loadbalancer(item: str, section: SECTION) -> CheckResult:
     if item not in section:
         return
 
@@ -82,7 +82,7 @@ def check_nsx_loadbalancer(item: str, section: Optional[SECTION]) -> CheckResult
 
 
 def cluster_check_nsx_loadbalancer(
-    item: str, section: Mapping[str, SECTION]
+    item: str, section: Mapping[str, Optional[SECTION]]
 ) -> CheckResult:
     yield Result(state=State.OK, summary='Nodes: %s' % ', '.join(section.keys()))
     for node_section in section.values():
