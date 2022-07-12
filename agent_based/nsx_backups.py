@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from typing import Any, TypedDict, Mapping
+from typing import Any, TypedDict, Mapping, Optional
 from datetime import datetime
 
 from .agent_based_api.v1 import (
@@ -104,7 +104,7 @@ def check_nsx_backups(
 def cluster_check_nsx_backups(
     item: str,
     params: Mapping[str, Any],
-    section: Mapping[str, Section],
+    section: Mapping[str, Optional[Section]],
 ) -> CheckResult:
     yield Result(state=State.OK, summary='Nodes: %s' % ', '.join(section.keys()))
     for node_section in section.values():

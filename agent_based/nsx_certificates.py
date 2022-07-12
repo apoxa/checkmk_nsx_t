@@ -102,7 +102,7 @@ def check_nsx_certificates(
 def cluster_check_nsx_certificates(
     item: str,
     params: Mapping[str, Any],
-    section: Mapping[str, Section],
+    section: Mapping[str, Optional[Section]],
 ) -> CheckResult:
     for node_name, node_section in section.items():
         yield from _check_nsx_certificates(

@@ -4,6 +4,7 @@
 from typing import (
     Dict,
     Mapping,
+    Optional,
 )
 
 from .agent_based_api.v1 import (
@@ -59,7 +60,7 @@ def discover_nsx_loadbalancer(section: SECTION) -> DiscoveryResult:
         yield Service(item=item)
 
 
-def check_nsx_loadbalancer(item: str, section: SECTION) -> CheckResult:
+def check_nsx_loadbalancer(item: str, section: Optional[SECTION]) -> CheckResult:
     if item not in section:
         return
 

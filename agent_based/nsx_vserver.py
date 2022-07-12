@@ -4,6 +4,7 @@
 from typing import (
     Dict,
     Mapping,
+    Optional,
 )
 
 from .agent_based_api.v1 import (
@@ -73,7 +74,7 @@ def check_nsx_vservers(item: str, section: SECTION) -> CheckResult:
 
 
 def cluster_check_nsx_vservers(
-    item: str, section: Mapping[str, SECTION]
+    item: str, section: Mapping[str, Optional[SECTION]]
 ) -> CheckResult:
     yield Result(state=State.OK, summary="Nodes: %s" % ", ".join(section.keys()))
     for node_section in section.values():

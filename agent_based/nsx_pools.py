@@ -4,6 +4,7 @@
 from typing import (
     Dict,
     Mapping,
+    Optional,
 )
 
 from .agent_based_api.v1 import (
@@ -63,7 +64,7 @@ def check_nsx_pools(item: str, section: Section) -> CheckResult:
     yield Result(state=State.OK, summary=f"ID: {pool['pool_id']}")
 
 
-def cluster_check_nsx_pools(item: str, section: Mapping[str, Section]) -> CheckResult:
+def cluster_check_nsx_pools(item: str, section: Mapping[str, Optional[Section]]) -> CheckResult:
     yield Result(state=State.OK, summary='Nodes: %s' % ', '.join(section.keys()))
     for node_section in section.values():
         if item in node_section:

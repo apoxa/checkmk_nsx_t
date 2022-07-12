@@ -4,6 +4,7 @@
 from typing import (
     Dict,
     Mapping,
+    Optional,
     TypedDict,
 )
 
@@ -72,13 +73,14 @@ def check_nsx_edges(item: str, section: Section) -> CheckResult:
         return
 
     edge = section[item]
-    edge_state = _STATUS_MAP.get(edge["status"], (3, "unknown[%s]" % edge["status"]))
+    edge_state = _STATUS_MAP.get(
+        edge["status"], (3, "unknown[%s]" % edge["status"]))
     yield Result(state=edge_state, summary=f"is {edge['status']}")
 
     yield Result(state=State.OK, summary=f"ID: {edge['id']}")
 
 
-def cluster_check_nsx_edges(item: str, section: Mapping[str, Section]) -> CheckResult:
+def cluster_check_nsx_edges(item: str, section: Mapping[str, Optional[Section]]) -> CheckResult:
     yield Result(state=State.OK, summary="Nodes: %s" % ", ".join(section.keys()))
     for node_section in section.values():
         if item in node_section:
