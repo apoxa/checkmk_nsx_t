@@ -34,6 +34,7 @@ Section = Dict[str, EdgeData]
 
 _STATUS_MAP = {
     "UP": State.OK,
+    "DEGRADED": State.WARN,
     "DOWN": State.CRIT,
 }
 
