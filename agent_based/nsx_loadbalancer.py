@@ -29,6 +29,7 @@ _ENABLED_MAP = {
 
 _STATUS_MAP = {
     "UP": State.OK,
+    "NO_STANDBY": State.WARN,
     "DISABLED": State.CRIT,
 }
 
