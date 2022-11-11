@@ -85,8 +85,6 @@ def _check_nsx_certificates(
     yield from check_levels(
         value=(expiry - now).days,
         levels_lower=params["age_levels"],
-        metric_name="daysleft",
-        render_func=lambda d: str(d) + " days",
         label=label if node_name is None else "[%s]: %s" % (node_name, label),
     )
 
