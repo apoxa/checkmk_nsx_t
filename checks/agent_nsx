@@ -1,7 +1,11 @@
 #!/usr/bin/env python
-# -*- encoding: utf-8 -*-
 
-def agent_nsx_arguments(params, hostname, ipaddress):
+from typing import Any, Mapping, Optional, Sequence
+
+
+def agent_nsx_arguments(
+    params: Mapping[str, Any], hostname: str, ipaddress: Optional[str]
+) -> Sequence[str]:
     args = []
     args += ["--address", hostname]
     args += ["--username", params["user"]]
@@ -9,6 +13,8 @@ def agent_nsx_arguments(params, hostname, ipaddress):
 
     if params.get("cert", True):
         args += ["--no-cert-check"]
+
     return args
 
-special_agent_info['nsx'] = agent_nsx_arguments
+
+special_agent_info["nsx"] = agent_nsx_arguments
