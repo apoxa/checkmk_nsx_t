@@ -3,9 +3,10 @@
 
 from typing import Optional
 
+from cmk.plugins.lib.cpu import Load, Section
+
 from .agent_based_api.v1 import register
 from .agent_based_api.v1.type_defs import StringTable
-from .utils.cpu import Load, Section
 
 
 def parse_nsx_cpu(string_table: StringTable) -> Optional[Section]:

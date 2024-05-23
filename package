@@ -40,7 +40,7 @@
     },
     "name": "Check_NSX",
     "title": "Checkmk extension for NSX-T 3.x",
-    "version": "0.4.11",
+    "version": "0.4.12",
     "version.min_required": "2.2.0",
     "version.packaged": "2.2.0",
 }
